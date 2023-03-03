@@ -104,7 +104,7 @@ def get_params(example_data):
 
 def main():
     directory_path = os.getcwd()
-    df = read_mal(os.path.join(directory_path, "62nd Master MAL.xlsx"))
+    df = read_mal(os.path.join(directory_path, "Example MAL.xlsx"))
 
     records = [
         r
