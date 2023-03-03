@@ -4,33 +4,7 @@ import os
 
 
 def read_mal(path):
-    dtypes = {
-        k: str
-        for k in [
-            "m4",
-            "nvg",
-            "M17",
-            "M249 SAW",
-            "PEQ-15",
-            "OPTIC",
-            "CREW PEQ-15",
-            "M240",
-            "M145 SCOPE",
-            "AN/PAS-13 V2",
-            "M320 GL",
-            "M26 SHOTGUN",
-            "LRF",
-            "THERMAL",
-            "BINOS",
-            "50 CAL",
-            "AN/PAS-13 V3",
-            "MK 19",
-            "CLU",
-            "SURE FIRE",
-        ]
-    }
-
-    df = pd.read_excel(path, dtype=dtypes)
+    df = pd.read_excel(path, dtype=str)
     df["name_and_rank"] = df["RANK"] + " " + df["NAME"]
     df["M4"] = df["BS# "] + " / " + df["M4 CARBINE"]
     df["PVS-14"] = (
@@ -95,7 +69,6 @@ def get_params(example_data):
     example_data = {k: v for k, v in example_data.items() if not pd.isna(v)}
     # add additional equipment depending on what people are assigned
     if "50 CAL" in example_data:
-        # add stuff
         example_data["Barrel Gloves"] = ""
         example_data["Spare Barrel"] = ""
         example_data["Barrel Handle"] = ""
@@ -113,8 +86,10 @@ def get_params(example_data):
     example_data["Rhino Mount"] = ""
     example_data["J Hook"] = ""
 
+    # define the order I want things to display
     ordering = {v: i for i, v in enumerate(FIELDS)}
 
+    # I only want to fill the intersection of FIELDS and what exists in example_data
     rel_fields = set(FIELDS).intersection(example_data.keys())
 
     ITEM_KEY = "ITEM DESCRIPTION bRow"
@@ -128,7 +103,7 @@ def get_params(example_data):
 
 
 def main():
-    directory_path = "/Users/joeschlessinger/Dropbox/Documents/Programming/mal_to_2062/"
+    directory_path = os.getcwd()
     df = read_mal(os.path.join(directory_path, "62nd Master MAL.xlsx"))
 
     records = [
